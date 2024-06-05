@@ -2,6 +2,17 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div class="font-extrabold text-2xl text-center">
+        <span>Selamat Datang di Aplikasi SPK CPI</span>
+    </div>
+
+    <div class="text-center my-4">
+        Belum punya akun?
+        <a class="font-extrabold text-sm text-blue-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
+            {{ __('Buat akun baru') }}
+        </a>
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
@@ -25,7 +36,7 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
+        <div class="mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
@@ -35,12 +46,12 @@
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    {{ __('Lupa password?') }}
                 </a>
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Masuk') }}
             </x-primary-button>
         </div>
     </form>
