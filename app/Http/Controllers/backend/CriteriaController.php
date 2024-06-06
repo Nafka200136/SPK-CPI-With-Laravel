@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCriteriaRequest;
 use App\Models\Criteria;
 use App\Models\Weight;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CriteriaController extends Controller
@@ -33,7 +32,13 @@ class CriteriaController extends Controller
      */
     public function store(StoreCriteriaRequest $request)
     {
-        $criteria = Criteria::create($request->only('name', 'type'));
+        $totalWeight = Weight::sum('value') + $request->input('value');
+
+        if ($totalWeight > 100) {
+            return redirect()->back()->withErrors(['value' => 'Berat total tidak boleh melebihi 100%']);
+        }
+
+        $criteria = Criteria::create($request->all());
         Weight::create([
             'criteria_id' => $criteria->id,
             'value' => $request->value
@@ -66,8 +71,15 @@ class CriteriaController extends Controller
     public function update(StoreCriteriaRequest $request, string $id)
     {
         $criteria = Criteria::findOrFail($id);
-        $criteria->update($request->only('name', 'type'));
-        $criteria->weight->update(['value' => $request->value]);
+        $weight = Weight::where('criteria_id', $criteria->id)->first();
+        $totalWeight = Weight::sum('value') - $weight->value + $request->input('value');
+
+        if ($totalWeight > 100) {
+            return redirect()->back()->withErrors(['value' => 'Berat total tidak boleh melebihi 100%']);
+        }
+
+        $criteria->update($request->all());
+        $weight->update(['value' => $request->input('value')]);
 
         return redirect()->route('kriteria.index')->with('success', 'Criteria updated successfully');
     }
