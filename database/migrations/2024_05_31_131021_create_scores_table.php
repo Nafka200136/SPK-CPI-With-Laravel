@@ -23,7 +23,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('criterias')
                 ->onDelete('cascade');
-            $table->decimal('value', 5, 2);
+            $table->integer('value');
             $table->timestamps();
         });
     }
